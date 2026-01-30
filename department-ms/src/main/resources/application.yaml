@@ -1,3 +1,5 @@
 spring:
   application:
     name: department-ms
+  profiles:
+    active: dev
