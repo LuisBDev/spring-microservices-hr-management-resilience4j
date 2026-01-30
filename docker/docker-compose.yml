@@ -1,0 +1,52 @@
+
+services:
+  # Base de datos para Employee Microservice
+  employee-mongodb:
+    image: mongo:7
+    container_name: employee-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: employee_db
+    volumes:
+      - mongo-employee-data:/data/db
+    networks:
+      - microservices-net
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Base de datos para Department Microservice
+  department-mongodb:
+    image: mongo:7
+    container_name: department-mongodb
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: department_db
+    volumes:
+      - mongo-department-data:/data/db
+    networks:
+      - microservices-net
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  microservices-net:
+    driver: bridge
+    name: microservices-net
+
+volumes:
+  mongo-employee-data:
+  mongo-department-data:
