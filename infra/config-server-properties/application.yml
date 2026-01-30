@@ -1,0 +1,25 @@
+
+http-clients:
+  internal:
+    api-order-service-v1:
+      base-url: http://localhost:50010/api/v1/orders
+      timeout: 5s
+    api-payment-service-v1:
+      base-url: http://localhost:50020/api/v1/payments
+      timeout: 5s
+    api-payment-service-v2:
+      base-url: http://localhost:50030/api/v1/payments
+      timeout: 5s
+    api-restaurant-service-v1:
+      base-url: http://localhost:50040/api/v1/restaurants
+      timeout: 5s
+    api-restaurant-service-v2:
+      base-url: http://localhost:50050/api/v1/restaurants
+      timeout: 5s
+    api-delivery-service-v1:
+      base-url: http://localhost:50060/api/v1/delivery
+      timeout: 5s
+  external:
+    api-visa-v1:
+      base-url: http://localhost:52010/api/visa
+      timeout: 5s
