@@ -1,0 +1,37 @@
+server:
+  port: 9090
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+          routes:
+            - id: employee-ms
+              uri: lb://employee-ms
+              predicates:
+                - Path=/gateway/api/v1/employees/**
+              filters:
+                - StripPrefix=1
+
+            - id: department-ms
+              uri: lb://department-ms
+              predicates:
+                - Path=/gateway/api/v1/departments/**
+              filters:
+                - StripPrefix=1
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
