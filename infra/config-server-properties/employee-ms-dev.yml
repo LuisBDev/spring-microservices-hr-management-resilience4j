@@ -1,3 +1,8 @@
+server:
+  port: 40070
+  servlet:
+    context-path: /api/v1
+
 management:
   endpoints:
     web:
