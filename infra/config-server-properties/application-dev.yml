@@ -1,0 +1,9 @@
+
+http-clients:
+  internal:
+    employee-ms:
+      base-url: http://employee-ms/api/v1/employees
+      timeout: 5s
+    department-ms:
+      base-url: http://department-ms/api/v1/departments
+      timeout: 5s
