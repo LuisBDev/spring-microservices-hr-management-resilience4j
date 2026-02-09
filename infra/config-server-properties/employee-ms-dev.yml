@@ -26,7 +26,6 @@ resilience4j:
           - java.util.concurrent.TimeoutException
           - java.io.IOException
           - feign.FeignException
-          - java.lang.Exception
         ignoreExceptions:
           - java.lang.IllegalArgumentException
 

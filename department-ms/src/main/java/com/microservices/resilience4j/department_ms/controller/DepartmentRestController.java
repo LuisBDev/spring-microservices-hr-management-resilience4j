@@ -36,7 +36,9 @@ public class DepartmentRestController {
                 .address("Department Address for id: " + id)
                 .build();
 
-        return ResponseEntity.ok(departmentResponse);
+        throw new RuntimeException("Simulated failure in Department Service");
+
+//        return ResponseEntity.ok(departmentResponse);
     }
 
 }
