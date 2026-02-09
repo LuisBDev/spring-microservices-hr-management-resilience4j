@@ -7,7 +7,7 @@ import lombok.*;
  **/
 @Getter
 @Setter
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeResponseDto {
