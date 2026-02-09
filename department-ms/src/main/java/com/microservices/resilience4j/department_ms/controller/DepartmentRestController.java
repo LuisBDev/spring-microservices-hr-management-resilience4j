@@ -1,7 +1,9 @@
 package com.microservices.resilience4j.department_ms.controller;
 
+import com.microservices.resilience4j.department_ms.dto.response.DepartmentResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +24,19 @@ public class DepartmentRestController {
         map.put("message","Department Service is running!");
         return ResponseEntity.ok(map);
 
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DepartmentResponse> getDepartmentById(@PathVariable String id) {
+
+        DepartmentResponse departmentResponse = DepartmentResponse.builder()
+                .id(id)
+                .name("Department Name for id: " + id)
+                .code("DEPT-" + id)
+                .address("Department Address for id: " + id)
+                .build();
+
+        return ResponseEntity.ok(departmentResponse);
     }
 
 }
