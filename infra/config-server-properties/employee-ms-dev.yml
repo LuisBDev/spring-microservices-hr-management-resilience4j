@@ -8,14 +8,48 @@ server:
   servlet:
     context-path: /api/v1
 
+# Resilience4j Circuit Breaker Configuration
+resilience4j:
+  circuitbreaker:
+    instances:
+      departmentService:
+        registerHealthIndicator: true
+        slidingWindowSize: 10  # Número de llamadas para calcular la tasa de fallos
+        minimumNumberOfCalls: 5  # Mínimo de llamadas antes de calcular tasa de error
+        permittedNumberOfCallsInHalfOpenState: 5  # Llamadas permitidas en estado semi-abierto
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s  # Tiempo en estado abierto antes de pasar a semi-abierto
+        failureRateThreshold: 50  # Porcentaje de fallos para abrir el circuito
+        eventConsumerBufferSize: 10
+        recordExceptions:
+          - org.springframework.web.client.HttpServerErrorException
+          - java.util.concurrent.TimeoutException
+          - java.io.IOException
+          - feign.FeignException
+        ignoreExceptions:
+          - java.lang.IllegalArgumentException
+
+  # Retry Configuration
+#  retry:
+#    instances:
+#      departmentService:
+#        maxAttempts: 3
+#        waitDuration: 1s
+#        enableExponentialBackoff: true
+#        exponentialBackoffMultiplier: 2
+
+# Actuator endpoints para monitorear el Circuit Breaker
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus
+        include: health,info,metrics,circuitbreakers,circuitbreakerevents
   endpoint:
     health:
       show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
 
 logging:
   level:
