@@ -18,7 +18,7 @@ resilience4j:
         minimumNumberOfCalls: 5  # Mínimo de llamadas antes de calcular tasa de error
         permittedNumberOfCallsInHalfOpenState: 5  # Llamadas permitidas en estado semi-abierto
         automaticTransitionFromOpenToHalfOpenEnabled: true
-        waitDurationInOpenState: 5s  # Tiempo en estado abierto antes de pasar a semi-abierto
+        waitDurationInOpenState: 60s  # Tiempo en estado abierto antes de pasar a semi-abierto
         failureRateThreshold: 50  # Porcentaje de fallos para abrir el circuito
         eventConsumerBufferSize: 10
         recordExceptions:
