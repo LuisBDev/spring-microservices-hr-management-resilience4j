@@ -30,13 +30,13 @@ resilience4j:
           - java.lang.IllegalArgumentException
 
   # Retry Configuration
-#  retry:
-#    instances:
-#      departmentService:
-#        maxAttempts: 3
-#        waitDuration: 1s
-#        enableExponentialBackoff: true
-#        exponentialBackoffMultiplier: 2
+  retry:
+    instances:
+      departmentServiceRetry:
+        maxAttempts: 3
+        waitDuration: 1s
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
 
 # Actuator endpoints para monitorear el Circuit Breaker
 management:

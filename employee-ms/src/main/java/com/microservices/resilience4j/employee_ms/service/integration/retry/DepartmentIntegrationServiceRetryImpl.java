@@ -1,35 +1,36 @@
-package com.microservices.resilience4j.employee_ms.service.impl;
+package com.microservices.resilience4j.employee_ms.service.integration.retry;
 
-import com.microservices.resilience4j.employee_ms.client.feign.config.DepartmentV1FeignClient;
+import com.microservices.resilience4j.employee_ms.client.webclient.DepartmentV1WebClient;
 import com.microservices.resilience4j.employee_ms.dto.response.EmployeeResponseDto;
-import com.microservices.resilience4j.employee_ms.service.DepartmentIntegrationService;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import com.microservices.resilience4j.employee_ms.service.integration.DepartmentIntegrationService;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * @author Luis Balarezo
+ **/
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class DepartmentIntegrationServiceImpl implements DepartmentIntegrationService {
+public class DepartmentIntegrationServiceRetryImpl implements DepartmentIntegrationService {
 
-    private final DepartmentV1FeignClient departmentClient;
+    private final DepartmentV1WebClient departmentClient;
 
     /**
-     * Obtiene datos del departamento usando Feign Client con Circuit Breaker
-     * Si el servicio de departamentos falla, se ejecuta el método de fallback
+     * Obtiene datos del departamento usando WebClient con Retry para manejar fallos temporales
+     * Si el servicio de departamentos está temporalmente no disponible, se reintentará la llamada según la configuración de Retry
      */
     @Override
-    @CircuitBreaker(name = "departmentService", fallbackMethod = "getDepartmentFallback")
+    @Retry(name = "departmentServiceRetry", fallbackMethod = "getDepartmentFallback")
     public EmployeeResponseDto obtainAndSetDepartmentData(EmployeeResponseDto employeeResponseDto) {
 
         log.info("Calling Department Service for departmentId: {}", employeeResponseDto.getDepartmentId());
 
         return Optional.ofNullable(departmentClient.getDepartmentById(employeeResponseDto.getDepartmentId()))
-                .map(ResponseEntity::getBody)
                 .map(departmentData -> {
 
                     EmployeeResponseDto.EmployeeResponseDtoBuilder builder = employeeResponseDto.toBuilder();
@@ -46,14 +47,14 @@ public class DepartmentIntegrationServiceImpl implements DepartmentIntegrationSe
     }
 
     /**
-     * Método fallback que se ejecuta cuando el Circuit Breaker está OPEN
+     * Método fallback que se ejecuta cuando se agotan los reintentos configurados en el método anotado con @Retry
      * o cuando ocurre una excepción en la llamada al servicio de departamentos
      * La firma del método debe coincidir con la del método original más un
      * parámetro para la excepción
      */
     public EmployeeResponseDto getDepartmentFallback(EmployeeResponseDto employeeResponseDto, Exception exception) {
 
-        log.error("Using fallback method. Error: {}", exception.getMessage());
+        log.error("Using RETRY fallback method. Error: {}", exception.getMessage());
         log.warn("Department Service is unavailable. Returning employee data with default department info");
 
         // Retornar datos del empleado con información por defecto del departamento
@@ -63,4 +64,6 @@ public class DepartmentIntegrationServiceImpl implements DepartmentIntegrationSe
                 .departmentAddress("Service Temporarily Unavailable")
                 .build();
     }
+
+
 }
