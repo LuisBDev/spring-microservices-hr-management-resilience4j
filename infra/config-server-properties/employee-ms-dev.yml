@@ -33,7 +33,7 @@ resilience4j:
   retry:
     instances:
       departmentServiceRetry:
-        maxAttempts: 3
+        maxAttempts: 5
         waitDuration: 1s
         enableExponentialBackoff: true
         exponentialBackoffMultiplier: 2
