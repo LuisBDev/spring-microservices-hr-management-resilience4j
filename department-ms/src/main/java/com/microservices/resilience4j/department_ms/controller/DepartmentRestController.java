@@ -2,10 +2,7 @@ package com.microservices.resilience4j.department_ms.controller;
 
 import com.microservices.resilience4j.department_ms.dto.response.DepartmentResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +24,8 @@ public class DepartmentRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DepartmentResponse> getDepartmentById(@PathVariable String id) {
+    public ResponseEntity<DepartmentResponse> getDepartmentById(@PathVariable String id,
+                                                                @RequestParam(value = "fail", required = false) boolean fail) {
 
         DepartmentResponse departmentResponse = DepartmentResponse.builder()
                 .id(id)
@@ -36,9 +34,11 @@ public class DepartmentRestController {
                 .address("Department Address for id: " + id)
                 .build();
 
-        throw new RuntimeException("Simulated failure in Department Service");
+        if (fail) {
+            throw new RuntimeException("Simulated failure for department id: " + id);
+        }
+        return ResponseEntity.ok(departmentResponse);
 
-//        return ResponseEntity.ok(departmentResponse);
     }
 
 }
