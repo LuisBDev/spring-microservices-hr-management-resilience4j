@@ -20,7 +20,7 @@ public class WebClientConfig {
 
     @Bean
     public WebClient departmentWebClient(
-            @Value("${http-clients.internal.department-ms}") String baseUrl,
+            @Value("${http-clients.internal.department-ms.base-url}") String baseUrl,
             WebClient.Builder webClientBuilder){
         return webClientBuilder
                 .clone()
