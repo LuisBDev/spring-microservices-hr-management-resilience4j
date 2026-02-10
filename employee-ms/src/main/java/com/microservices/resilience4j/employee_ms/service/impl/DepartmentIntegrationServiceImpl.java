@@ -53,7 +53,7 @@ public class DepartmentIntegrationServiceImpl implements DepartmentIntegrationSe
      */
     public EmployeeResponseDto getDepartmentFallback(EmployeeResponseDto employeeResponseDto, Exception exception) {
 
-        log.error("Circuit Breaker activated! Using fallback method. Error: {}", exception.getMessage());
+        log.error("Using fallback method. Error: {}", exception.getMessage());
         log.warn("Department Service is unavailable. Returning employee data with default department info");
 
         // Retornar datos del empleado con información por defecto del departamento
